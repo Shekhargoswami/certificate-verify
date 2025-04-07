@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        .container {
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100%;
+        }
+        .box {
+            background-color: rgba(0, 0, 0, 0.723);
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 20px;
+            border: 3px solid white;
+        }
+        p {
+            color: white;
+            font-size: 22px;
+        }
+        input {
+            background-color: #333;
+            color: white;
+            padding: 10px 40px;
+            border: 2px solid white;
+        }
+        button {
+            background-color: rgb(37, 37, 37);
+            padding: 10px 90px;
+            color: white;
+            border: 2px solid rgb(200, 197, 197);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <p>Certificate Verification</p>
+            <input type="text" id="certificateInput" placeholder="Enter Certificate No."><br><br>
+            <button onclick="verifyCertificate()">Check me</button>
+            <div id="result" style="color: rgb(240, 236, 236); margin-top: 20px;"></div>
+        </div>
+    </div>
+    <script>
+        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRlnvpf6FOGVcktA35tDLftiEORFg2lq9h1mLxcwaawuqGMl40xshIDfhFJDmBU9zZKw9VreQUyHkcN/pubhtml?gid=0&single=true&output=csv";
+
+        async function verifyCertificate() {
+            const input= document.getElementById("certificateInput").value.trim();
+            const resultDiv = document.getElementById("result");
+           
+
+            if (!input) {
+                resultDiv.innerHTML = "Please enter a certificate number.";
+            
+            }
+
+            try {
+                const response = await fetch(sheetURL);
+                const data = await response.text();
+                const certnumber = data.split("\n").map(row => row.trim());
+
+    
+
+                if (certnumber.includes(input)) {
+                    resultDiv.innerHTML = "Certificate Found!";
+                } else {
+                    resultDiv.innerHTML = "Certificate Not Found.";
+                }
+            } catch (error) {
+              
+                resultDiv.innerHTML = "Error verifying.";
+            }
+        }
+    </script>
+</body>
+</html>
